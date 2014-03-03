@@ -1,0 +1,40 @@
+ <tr>
+  <td class="contentMainTop" colspan="2" align="center"><span class="fontBold">[head]</span></td>
+</tr>
+ <tr>
+  <td class="contentMainTop" colspan="2" align="center"><span class="fontBold">Version: [version]</span></td>
+</tr>
+<tr>
+<td>
+<form name="usercommander" action="?admin=[what]&amp;do=action" method="post" onsubmit="return(DZCP.submitButton())"> 
+<table class="hperc" cellspacing="1">
+
+ <tr>
+  <td class="contentMainFirst" >
+  	<select name="userid">
+		[userlist]
+	</select>
+  </td>
+  <td class="contentMainFirst" >
+	<select name="action">
+		<option value="1">Show<option>
+	</select>
+  </td>
+  <td class="contentMainFirst" >
+	<select name="action">
+		<option value="0">All<option>
+		<option value="news">News-Comments<option>
+		<option value="news">Forum-Posts<option>
+		<option value="news">Forum-Topics<option>
+		<option value="news">News<option>
+	</select>
+  </td>
+  <td>
+	<input id="contentSubmit" type="submit" value="Action" class="submit" />
+  </td>
+</tr>
+<tr>
+  <td class="contentBottom" colspan="4" align="center"><span class="fontBold">UserCommander &copy; 2014 Tune389 aka D4yl1n3</span></td>
+ </tr>
+</table>
+</form>
