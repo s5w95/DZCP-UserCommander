@@ -3,69 +3,54 @@
 </tr>
 <form name="usercommander" action="?admin=usercommander&amp;do=update_profile&amp;id=[id]" method="post" onsubmit="return(DZCP.submitButton())"> 
 	<tr>
-		<td>
-			<table>
-				<tr>
+
 					<td class="contentMainTop">Username:</td>
-					<td><input name="user" value="[user]" /></td>
-				</tr>
-				<tr>
+					<td align="center" ><input name="user" size="30" value="[user]" /></td>					
 					<td class="contentMainTop">Nick:</td>
-					<td><input name="nick" value="[nick]" /></td>
+					<td align="center" ><input name="nick" size="30" value="[nick]" /></td>
 				</tr>
+
 				<tr>
 					<td class="contentMainTop">RealName:</td>
-					<td><input name="rlname" value="[rlname]" /></td>
-				</tr>
-				<tr>
+					<td align="center"> <input name="rlname" size="30" value="[rlname]" /></td>
 					<td class="contentMainTop">Userid:</td>
-					<td><input name="id" value="[id]" /></td>
+					<td align="center"><input name="id" size="30" value="[id]" /></td>
 				</tr>
 				<tr>
 					<td class="contentMainTop">Level:</td>
-					<td><input name="level" value="[level]" /></td>
-				</tr>
-				<tr>
+					<td align="center"><input name="level" size="30" value="[level]" /></td>
 					<td class="contentMainTop">Password:</td>
-					<td><input name="pass" type="password" value="" /></td>
+					<td align="center"><input name="pass" size="30" type="password" value="" /></td>
 				</tr>
 				<tr>
 					<td class="contentMainTop">Email:</td>
-					<td><input name="email" value="[email]" /></td>
-				</tr>
-
-				</table>
-				</td>
-				<td>
-				<table>
-				<tr>
+					<td align="center"><input name="email" size="30" value="[email]" /></td>
 					<td class="contentMainTop">City:</td>
-					<td><input name="city" value="[city]" /></td>
+					<td align="center"><input name="city" size="30" value="[city]" /></td>
 				</tr>
 				<tr>
 					<td class="contentMainTop">SteamID:</td>
-					<td><input name="steamid" value="[steamid]" /></td>
-				</tr>
-				<tr>
+					<td align="center"><input name="steamid" size="30" value="[steamid]" /></td>
 					<td class="contentMainTop">Skype:</td>
-					<td><input name="skype" value="[skype]" /></td>
+					<td align="center"><input name="skype" size="30" value="[skype]" /></td>
 				</tr>
 				<tr>
 					<td class="contentMainTop">Origin:</td>
-					<td><input name="originid" value="[originid]" /></td>
-				</tr>
-			</table>
-		</td>
+					<td align="center"><input name="originid" size="30" value="[originid]" /></td>
+
 	</tr>
 	<tr>
-		<td class="contentBottom" colspan="2">
-			<input id="contentSubmit" type="submit" value="Submit" class="submit" />
+		<td class="contentBottom" colspan="4">
+			<input id="contentSubmit" type="submit"  onclick="return(DZCP.del('Continue'))" value="Submit" class="submit" />
 		</td>
 	</tr>
 </form>
 <tr>
-	<td class="contentMainTop" colspan="4" align="center"><span class="fontBold">Entrys:</span></td>
+	<td class="contentMainTop" colspan="4" align="center"><span class="fontBold">[s_entrys]</span></td>
 </tr>
-<tr>
+
 [entrys]
+
+<tr>
+	<td class="contentMainTop" colspan="4" align="center"><input type="button" onclick="window.location.href = '../admin/?admin=usercommander';" value="Back" class="submit"></td>
 </tr>

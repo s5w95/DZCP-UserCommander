@@ -1,7 +1,12 @@
-<table >
 <tr>
-<td class="contentMainTop" width="20%">[part]</td>
-<td width="80%"><table>[show]</table></td>
+	<td class="contentMainTop" width="10%">[part]
+		<a href="?admin=usercommander&amp;do=delete&amp;part=[part]&amp;id=[id]&amp;all=1" onclick="return(DZCP.del('Delete+complete+content+of+[part]+from+this+user'))">
+			<img src="../inc/images/delete.gif" title="Löschen" alt="Löschen" class="icon">
+		</a>
+	</td>
+	<td width="80%" colspan="3">
+		<table width="100%">
+			[show]
+		</table>
+	</td>
 </tr>
-</table>
-
