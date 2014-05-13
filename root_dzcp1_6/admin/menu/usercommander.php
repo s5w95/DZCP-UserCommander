@@ -1,8 +1,4 @@
  <?php
-/////////// ADMINNAVI \\\\\\\\\
-// Typ:       contentmenu
-// Rechte:    $chkMe == 4
-///////////////////////////////
 if(_adminMenu != 'true') exit;
 $what = "usercommander";
 $where = $where.': '._config_usercommander;
