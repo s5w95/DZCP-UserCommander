@@ -3,6 +3,7 @@
 if(_adminMenu != 'true') exit;
 $what = "usercommander";
 $where = $where.': '._config_usercommander;
+$uc_version = 1.0;
 if($chkMe != 4)
 {
     $show = error(_error_wrong_permissions, 1);
@@ -62,7 +63,7 @@ if($chkMe != 4)
         }
     }
     $show = show("admin/usercommander", array(	"show" => $show,
-        "version" => TuneKit_getVersion(),
+        "version" => TuneKit_getVersion($uc_version),
         "head" => _config_usercommander,
         "what" => $what,
         "notice" => $notice,
@@ -164,25 +165,25 @@ class CommandUser {
             switch($get)
             {
                 case 'newscomments':
-                    // db('DELETE FROM '.$this->db['newscomments'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['newscomments'].' WHERE id = '.$id);
                     break;
                 case 'forumposts':
-                    // db('DELETE FROM '.$this->db['f_posts'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['f_posts'].' WHERE id = '.$id);
                     break;
                 case 'acomments':
-                    // db('DELETE FROM '.$this->db['acomments'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['acomments'].' WHERE id = '.$id);
                     break;
                 case 'forumthreads':
-                    //  db('DELETE FROM '.$this->db['f_threads'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['f_threads'].' WHERE id = '.$id);
                     break;
                 case 'messages':
-                    // db('DELETE FROM '.$this->db['msg'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['msg'].' WHERE id = '.$id);
                     break;
                 case 'cw_comments':
-                    //   db('DELETE FROM '.$this->db['cw_comments'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['cw_comments'].' WHERE id = '.$id);
                     break;
                 case 'user':
-                    // db('DELETE FROM '.$this->db['users'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['users'].' WHERE id = '.$id);
                     break;
             }
             $this->log("$get with ID: $id from user ".$this->nick." deleted");
