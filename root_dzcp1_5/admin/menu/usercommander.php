@@ -67,7 +67,7 @@ if($chkMe != 4)
         }
     }
     $show = show("admin/usercommander", array(	"show" => $show,
-        "version" => TuneKit_getVersion($uc_version),
+        "version" => TuneKit_getVersion(NULL,$uc_version),
         "head" => _config_usercommander,
         "what" => $what,
         "notice" => $notice,
