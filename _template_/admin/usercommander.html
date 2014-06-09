@@ -1,7 +1,68 @@
 <tr>
 	<td class="contentMainTop" colspan="4" align="center"><span class="fontBold">[head]</span></td>
 </tr>
-	[show]
+<tr>
+	<td class="contentMainTop" colspan="4" align="center"><span class="fontBold">Version: [version]</span></td>
+</tr>
+<tr>
+	<td class="contentMainTop" colspan="4" align="center"><span class="fontBold">Warning!</span></td>
+</tr>
+<tr>
+	<td colspan="4" align="center"><span class="fontBold">You can delete and change any posts and user informations with this addon, also your own things! Backup your database!</span></td>
+</tr>
 <tr>
 	<td class="contentMainTop" colspan="4" align="center"><span class="fontBold"></span></td>
+</tr>
+<tr>
+	<td colspan="4">
+		<form name="usercommander" method="GET" onsubmit="return(DZCP.submitButton())"> 
+			<input type="hidden" name="admin" value="[what]" /> 
+			<input type="hidden" name="do" value="action" /> 
+			<table class="hperc" cellspacing="1">
+				<tr>
+					<td>
+						User
+					</td>
+					<td>
+						Quick Action:
+					</td>
+					<td>
+						Quick Choise:
+					</td>
+				</tr>
+				<tr>
+					<td class="contentMainFirst" >
+						<select name="userid">
+							[userlist]
+						</select>
+					</td>
+					<td class="contentMainFirst" >
+						<select name="action">
+							<option value="show">Show</option>
+							<option value="remove">Remove</option>
+						</select>
+					</td>
+					<td class="contentMainFirst" >
+						<select name="part">
+							<option value="all">All</option>
+							<option value="user">User-Informations</option>
+							<option value="newscomments">News-Comments</option>
+							<option value="forumposts">Forum-Posts</option>
+							<option value="forumthreads">Forum-Topics</option>
+							<option value="messages">Nachrichten</option>
+							<option value="cw_comments">Clan-War-Comments</option>
+						</select>
+					</td>
+					<td>
+						<input id="contentSubmit" type="submit" value="Action" onclick="return(DZCP.del('Continue'))" class="submit" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</td>
+</tr>
+	[notice]
+	[show]
+<tr>
+	<td class="contentBottom" colspan="4" align="center"><span class="fontBold"><br />UserCommander &copy; 2014 Tune389 aka D4yl1n3<br /><br /></span></td>
 </tr>
