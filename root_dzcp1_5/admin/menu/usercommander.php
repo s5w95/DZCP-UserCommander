@@ -4,38 +4,50 @@
 // Rechte:    $chkMe == 4
 ///////////////////////////////
 
+/**
+* @package: DZCP-UserCommander
+* @author: Tune389 - Dayline-Studio
+* @link: http://hd-gamers.de
+*/
+
 if(_adminMenu != 'true') exit;
 $what = "usercommander";
-$uc_version = 1.0;
 $where = $where.': '._config_usercommander;
+$uc_version = 1.1;
 if($chkMe != 4)
 {
     $show = error(_error_wrong_permissions, 1);
-} else
-{
+} else {
+
+    $_SESSION['uc_security'] = empty($_SESSION['uc_security']) ? mkpwd() : $_SESSION['uc_security'];
     set_last_site();
-    global $db;
-
-
     if(isset($_GET['userid'])) $_SESSION['uc_user'] = $_GET['userid'];
+
     $qry_users = db("SELECT nick,id FROM ".$db['users']);
     $options = "";
+    $user_active = false;
     while ($user = _fetch($qry_users))
     {
-        $uc_selected = $_SESSION['uc_user'] == $user['id'] ? 'selected' : "";
+        $uc_selected = '';
+        if ($_SESSION['uc_user'] == $user['id']) {
+            $uc_selected = 'selected';
+            $user_active = true;
+        }
         $options .= '<option value ="'.$user['id'].'" '.$uc_selected.'>'.$user['nick']."</option>";
     }
-
-    if (isset($_GET['do']))
+    $uc_user = new CommandUser($_SESSION['uc_user']);
+    if (!empty($_SESSION['uc_notice'])) {
+        $color = 'green';
+        if (!empty($_SESSION['uc_notice_color'])) $color = $_SESSION['uc_notice_color'];
+        $notice = show('admin/usercommander_notice', array('content' => $_SESSION['uc_notice'], 'color' => $color));
+        $_SESSION['uc_notice'] = "";
+        $_SESSION['uc_notice_color'] = "";
+    } else {
+        $notice = "";
+    }
+    if (isset($_GET['do']) & $user_active)
     {
-        $uc_user = new CommandUser($_SESSION['uc_user']);
-        if (!empty($_SESSION['uc_notice'])) {
-            $notice = show('admin/usercommander_notice', array('content' => $_SESSION['uc_notice']));
-            $_SESSION['uc_notice'] = "";
-        } else {
-            $notice = "";
-        }
-
+        secure_this_area();
         switch($_GET['do'])
         {
             case 'action':
@@ -49,30 +61,44 @@ if($chkMe != 4)
                 }
                 else if ($_GET['action'] == 'remove')
                 {
-                    $uc_user->delete_from_user($_GET['part'],1);
-                    $_SESSION['uc_notice'] = $uc_user->get_log_table;
-                    header('Location: '.$_SESSION['uc_last']);
+                    $uc_user->delete_from_user($_GET['part'],-1);
+                    check_work($uc_user);
+                    go_back();
                 }
                 break;
             case 'delete':
                 $uc_user->delete_from_user($_GET['part'],$_GET['id']);
-                $_SESSION['uc_notice'] = $uc_user->get_log_table();
-                header('Location: '.$_SESSION['uc_last']);
+                check_work($uc_user);
+                go_back();
                 break;
             case 'update_profile':
                 $uc_user->update_profile_from_get();
-                $_SESSION['uc_notice'] = '<p>Profile Updated</p>';
-                header('Location: '.$_SESSION['uc_last']);
+                set_notice('<p>Profile from '.$uc_user->nick.' Updated</p>');
+                go_back();
                 break;
         }
     }
-    $show = show("admin/usercommander", array(	"show" => $show,
+    $show = show("admin/usercommander", array(
+        "show" => $show,
         "version" => TuneKit_getVersion(NULL,$uc_version),
         "head" => _config_usercommander,
         "what" => $what,
+        "uc_sid" => $_SESSION['uc_security'],
         "notice" => $notice,
         "userlist" => $options
     ));
+}
+
+function check_work($uc_user) {
+    if ($uc_user->work) {
+        set_notice($uc_user->get_log_table());
+    } else {
+        set_notice('Nothing to do here', 'red');
+    }
+}
+function set_notice($notice, $color = 'green') {
+    $_SESSION['uc_notice'] = $notice;
+    $_SESSION['uc_notice_color'] = $color;
 }
 
 function set_last_site() {
@@ -80,12 +106,29 @@ function set_last_site() {
     $_SESSION['uc_cur_url'] = ((empty($_SERVER['HTTPS'])) ? 'http' : 'https') .'://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 }
 
+function go_back() {
+    header('Location: '.$_SESSION['uc_last']);
+}
+
+function go_home() {
+    header('Location: ?admin=usercommander');
+}
+
+function secure_this_area() {
+    if ($_GET['uc_sid'] != $_SESSION['uc_security']) {
+        $_SESSION['uc_notice'] = 'Action denied, uc_sid is missing';
+        $_SESSION['uc_notice_color'] = 'red';
+        go_home();
+    }
+}
+
 class CommandUser {
 
     private $db;
     private $log = "";
+    public $work = false;
 
-    private $user, $nick, $rlname, $pass, $level, $email, $city, $steamid, $skypename, $originid;
+    public $user, $nick, $rlname, $pass, $level, $email, $city, $steamid, $skypename, $originid;
 
     public function __construct($userid) {
         global $db;
@@ -152,10 +195,16 @@ class CommandUser {
                 $this->delete_from_user('forumthreads',-1);
                 $this->delete_from_user('messages',-1);
                 $this->delete_from_user('cw_comments',-1);
-                $this->delete_from_user('user',$this->id);
             }
-            else
-            {
+            else if($get == 'full_extinction'){
+                $this->delete_from_user('newscomments',-1);
+                $this->delete_from_user('forumposts',-1);
+                $this->delete_from_user('acomments',-1);
+                $this->delete_from_user('forumthreads',-1);
+                $this->delete_from_user('messages',-1);
+                $this->delete_from_user('cw_comments',-1);
+                $this->delete_from_user('user',$this->id);
+            } else {
                 $qry = $this->get_userinformation_qry_from($get);
                 while ($get_entrys = mysqli_fetch_assoc($qry))
                 {
@@ -181,7 +230,7 @@ class CommandUser {
                     db('DELETE FROM '.$this->db['f_threads'].' WHERE id = '.$id);
                     break;
                 case 'messages':
-                     db('DELETE FROM '.$this->db['msg'].' WHERE id = '.$id);
+                    db('DELETE FROM '.$this->db['msg'].' WHERE id = '.$id);
                     break;
                 case 'cw_comments':
                     db('DELETE FROM '.$this->db['cw_comments'].' WHERE id = '.$id);
@@ -190,6 +239,7 @@ class CommandUser {
                     db('DELETE FROM '.$this->db['users'].' WHERE id = '.$id);
                     break;
             }
+            $this->work = true;
             $this->log("$get with ID: $id from user ".$this->nick." deleted");
         }
     }
@@ -199,7 +249,7 @@ class CommandUser {
     }
 
     public function get_log_table() {
-        return '<table style="color:white">'.$this->log.'</table>';
+        return '<table>'.$this->log.'</table>';
     }
 
     public function render_user($get, $showentrys = true) {
@@ -228,6 +278,7 @@ class CommandUser {
     function render_entrys($get)
     {
         $table = "";
+        if ($get == 'full_extinction') $get = 'all';
         if ($get == 'all'){
             $table =  $this->render_entrys('newscomments');
             $table .= $this->render_entrys('forumposts');
@@ -254,7 +305,7 @@ class CommandUser {
                 $table = "<tr><td>No Entrys found</td></tr>";
             }
         }
-        return show("admin/usercommander_show", array("show" => $table, "part" => ucfirst($get), "username" => $this->user, "id" => -1));
+        return show("admin/usercommander_show", array("show" => $table, "part" => $get, "username" => $this->user, "id" => -1));
     }
 }
 

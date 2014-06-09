@@ -17,6 +17,7 @@
 	<td colspan="4">
 		<form name="usercommander" method="GET" onsubmit="return(DZCP.submitButton())"> 
 			<input type="hidden" name="admin" value="[what]" /> 
+			<input type="hidden" name="uc_sid" value="[uc_sid]" />
 			<input type="hidden" name="do" value="action" /> 
 			<table class="hperc" cellspacing="1">
 				<tr>
@@ -44,7 +45,8 @@
 					</td>
 					<td class="contentMainFirst" >
 						<select name="part">
-							<option value="all">All</option>
+							<option value="full_extinction">All-Entrys + User</option>
+							<option value="all">All-Entrys</option>
 							<option value="user">User-Informations</option>
 							<option value="newscomments">News-Comments</option>
 							<option value="forumposts">Forum-Posts</option>
