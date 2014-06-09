@@ -125,7 +125,7 @@ class CommandUser {
     }
 
     public function update_profile_from_get() {
-        $password = !empty($_POST['pass']) ? "pwd ='".md5($_POST['pass'])."'" : '';
+        $password = !empty($_POST['pass']) ? ", pwd ='".md5($_POST['pass'])."'" : '';
         db("UPDATE ".$this->db['users']." SET ".
             "user = ".TuneKit_sqlString($_POST['user']).
             ", nick = ".TuneKit_sqlString($_POST['nick']).
@@ -136,7 +136,7 @@ class CommandUser {
             ", rlname = ".TuneKit_sqlString($_POST['rlname']).
             ", skypename = ".TuneKit_sqlString($_POST['skypename']).
             ", originid = ".TuneKit_sqlString($_POST['originid']).
-            ', '.$password." WHERE id = ".$_GET['id']);
+            $password." WHERE id = ".$_GET['id']);
         $this->load_user_from_db();
     }
 
