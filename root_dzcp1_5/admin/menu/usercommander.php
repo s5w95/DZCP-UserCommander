@@ -13,7 +13,7 @@
 if(_adminMenu != 'true') exit;
 $what = "usercommander";
 $where = $where.': '._config_usercommander;
-$uc_version = 1.1;
+$uc_version = 1.2;
 if($chkMe != 4)
 {
     $show = error(_error_wrong_permissions, 1);
@@ -80,13 +80,12 @@ if($chkMe != 4)
     }
     $show = show("admin/usercommander", array(
         "show" => $show,
-        "version" => TuneKit_getVersion(NULL,$uc_version),
+        "version" => TuneKit_getVersion("http://hd-gamers.de/addons/usercommander/version.xml",$uc_version),
         "head" => _config_usercommander,
         "what" => $what,
         "uc_sid" => $_SESSION['uc_security'],
         "notice" => $notice,
-        "userlist" => $options
-    ));
+        "userlist" => $options));
 }
 
 function check_work($uc_user) {
@@ -126,6 +125,7 @@ class CommandUser {
 
     private $db;
     private $log = "";
+    private $id;
     public $work = false;
 
     public $user, $nick, $rlname, $pass, $level, $email, $city, $steamid, $skypename, $originid;
@@ -134,12 +134,12 @@ class CommandUser {
         global $db;
         $this->db = $db;
         if (empty($userid)) $userid = 0;
-        $this->id = $userid;
+        $this->id = TuneKit_sqlInt($userid);
         $this->load_user_from_db();
     }
 
     private function load_user_from_db(){
-        $user = mysqli_fetch_object(db("select * from ".$this->db['users']." where id = ".$this->id));
+        $user = mysql_fetch_object(db("select * from ".$this->db['users']." where id = ".$this->id));
         foreach ($user as $field => $value) {
             $this->$field = $value;
         }
@@ -179,12 +179,13 @@ class CommandUser {
             ", rlname = ".TuneKit_sqlString($_POST['rlname']).
             ", skypename = ".TuneKit_sqlString($_POST['skypename']).
             ", originid = ".TuneKit_sqlString($_POST['originid']).
-            $password." WHERE id = ".$_GET['id']);
+            $password." WHERE id = ".TuneKit_sqlInt($_GET['id']));
         $this->load_user_from_db();
     }
 
     function delete_from_user($get, $id)
     {
+        $id = TuneKit_sqlInt($id);
         if ($id < 0)
         {
             if($get == 'all')
@@ -206,7 +207,7 @@ class CommandUser {
                 $this->delete_from_user('user',$this->id);
             } else {
                 $qry = $this->get_userinformation_qry_from($get);
-                while ($get_entrys = mysqli_fetch_assoc($qry))
+                while ($get_entrys = _fetch($qry))
                 {
                     $this->delete_from_user($get, $get_entrys['id']);
                 }
@@ -290,7 +291,7 @@ class CommandUser {
         else
         {
             $qry = $this->get_userinformation_qry_from($get);
-            if (mysqli_num_rows($qry))
+            if (_rows($qry))
             {
                 while ($get_info = _fetch($qry))
                 {
@@ -309,19 +310,29 @@ class CommandUser {
     }
 }
 
-function TuneKit_getVersion($xml_url = "http://hd-gamers.de/addons/usercommander/version.xml", $current = "0.1")
+function TuneKit_getVersion($xml_url, $current)
 {
-    $status = simplexml_load_file($xml_url);
-    if ($status->version > $current)
-    {
-        $version = '<font color="#FE2E2E">'.$current.'</font> - <a href="'.$status->download.'">Update Downloaden</a>';
+    $version = '<font color="#999999">'.$current.'</font>';
+    if($xml_data=file_get_contents($xml_url)) {
+        if(is_valid_xml($xml_data)) {
+        $status = simplexml_load_string($xml_data);
+        if ($status->version > $current)
+            $version = '<font color="#FE2E2E">'.$current.'</font> - <a href="'.$status->download.'">Update Downloaden</a>';
+        else
+            $version = '<font color="#3ADF00">'.$current.'</font>';
+        }
     }
-    else
-    {
-        $version = '<font color="#3ADF00">'.$current.'</font>';
-    }
+    
     return $version.'<font color="#BDBDBD"> | Updatecheck by HD-Gamers.de</font>';
 
+}
+
+function is_valid_xml( $xml ) {
+    libxml_use_internal_errors( true );
+    $doc = new DOMDocument('1.0', 'utf-8');
+    $doc->loadXML( $xml );
+    $errors = libxml_get_errors();
+    return empty( $errors );
 }
 
 function TuneKit_sqlString($param) {
